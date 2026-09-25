@@ -441,6 +441,20 @@
       filter: blur(30px);
       transform: scale(1.04);
     }
+    .char-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center bottom;
+      filter: drop-shadow(0 34px 48px rgba(0, 0, 0, .42));
+      -webkit-mask-image: radial-gradient(ellipse 58% 74% at 50% 50%, #000 0 78%, transparent 98%);
+      mask-image: radial-gradient(ellipse 58% 74% at 50% 50%, #000 0 78%, transparent 98%);
+      pointer-events: none;
+      will-change: transform;
+      transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.4, 1);
+    }
     .char-img {
       position: absolute;
       inset: 0;
@@ -449,17 +463,9 @@
       object-fit: contain;
       object-position: center bottom;
       filter: drop-shadow(0 34px 48px rgba(0, 0, 0, .42));
-    }
-    .char-body {
-      -webkit-mask-image: radial-gradient(ellipse 54% 72% at 50% 48%, #000 0 76%, transparent 96%);
-      mask-image: radial-gradient(ellipse 54% 72% at 50% 48%, #000 0 76%, transparent 96%);
-    }
-    .char-head {
-      transform-origin: 50% 23%;
-      will-change: transform;
-      -webkit-mask-image: radial-gradient(ellipse 24% 20% at 50% 15%, #000 0 66%, transparent 100%);
-      mask-image: radial-gradient(ellipse 24% 20% at 50% 15%, #000 0 66%, transparent 100%);
-      transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.4, 1);
+      -webkit-mask-image: radial-gradient(ellipse 58% 74% at 50% 50%, #000 0 78%, transparent 98%);
+      mask-image: radial-gradient(ellipse 58% 74% at 50% 50%, #000 0 78%, transparent 98%);
+      pointer-events: none;
     }
     .pokeball-zone {
       position: absolute;
@@ -2286,7 +2292,7 @@
       .preloader { display: none; }
       body.loading { overflow: auto; }
       .site-nav { opacity: 1; transform: none; }
-      .char-head, #about, .hero, .reveal-item, .role, .timeline:before, .contact-inner { transform: none !important; opacity: 1 !important; animation: none !important; }
+      .char-video, .char-img, #about, .hero, .reveal-item, .role, .timeline:before, .contact-inner { transform: none !important; opacity: 1 !important; animation: none !important; }
     }
   </style>
 </head>
@@ -2368,8 +2374,9 @@
         <div class="hero-stage" aria-label="Cursor tracking character">
           <div class="character-wrap" id="characterWrap">
             <div class="red-glow"></div>
-            <img class="char-img char-body" src="assets/shaggy-character.jpg" alt="3D personal mascot inspired by Harman's character reference">
-            <img class="char-img char-head" id="charHead" src="assets/shaggy-character.jpg" alt="">
+            <video class="char-video" id="charVideo" playsinline muted preload="auto" poster="assets/shaggy-character.jpg">
+              <source src="assets/character_waving_and_turning.mp4" type="video/mp4">
+            </video>
             <div class="pokeball-zone" id="pokeballZone" aria-label="Harman Skills Core"></div>
             <span class="orbit-chip">AI Agents</span>
             <span class="orbit-chip">Agentic AI</span>
@@ -2801,8 +2808,67 @@
     const progressLine = document.querySelector('.progress-line');
     const hero = document.querySelector('#hero');
     const wrap = document.querySelector('#characterWrap');
-    const head = document.querySelector('#charHead');
+    const charVideo = document.querySelector('#charVideo');
     const about = document.querySelector('#about');
+
+    // Video Scrubbing & Hover Tracking System
+    let isSeeking = false;
+    let pendingSeekTime = null;
+    let targetVideoTime = 0;
+    let currentVideoTime = 0;
+
+    function seekVideo(time) {
+      if (!charVideo || !charVideo.duration || isNaN(charVideo.duration)) return;
+      const clamped = Math.max(0, Math.min(charVideo.duration - 0.04, time));
+
+      if (isSeeking) {
+        pendingSeekTime = clamped;
+        return;
+      }
+
+      if (Math.abs(charVideo.currentTime - clamped) < 0.015) return;
+
+      isSeeking = true;
+      if ('fastSeek' in charVideo) {
+        try {
+          charVideo.fastSeek(clamped);
+        } catch (e) {
+          charVideo.currentTime = clamped;
+        }
+      } else {
+        charVideo.currentTime = clamped;
+      }
+    }
+
+    if (charVideo) {
+      charVideo.pause();
+      charVideo.addEventListener('loadedmetadata', () => {
+        targetVideoTime = 0;
+        currentVideoTime = 0;
+        seekVideo(0);
+      });
+      charVideo.addEventListener('seeked', () => {
+        isSeeking = false;
+        if (pendingSeekTime !== null) {
+          const t = pendingSeekTime;
+          pendingSeekTime = null;
+          seekVideo(t);
+        }
+      });
+    }
+
+    // Continuous 60fps smoothing loop for responsive, jitter-free video tracking
+    function videoRenderLoop() {
+      if (charVideo && charVideo.duration && !isNaN(charVideo.duration)) {
+        const diff = targetVideoTime - currentVideoTime;
+        if (Math.abs(diff) > 0.003) {
+          currentVideoTime += diff * 0.22;
+          seekVideo(currentVideoTime);
+        }
+      }
+      requestAnimationFrame(videoRenderLoop);
+    }
+    requestAnimationFrame(videoRenderLoop);
 
     // Skill Burst State & Tracking
     let isSkillBursting = false;
@@ -2868,28 +2934,25 @@
       }
     }
 
-    // Pointer move handler for 3D Head/Neck Tracking and Pokeball Proximity Detection
+    // Pointer move handler for 3D Video Hover Scrubbing and Pokeball Proximity Detection
     function handlePointerMove(e) {
       if (reduced) return;
 
-      // 1. CHARACTER HEAD & NECK TRACKING
-      if (head) {
-        const headRect = head.getBoundingClientRect();
-        // Pivot point at center of character's head/neck
-        const headCenterX = headRect.left + headRect.width * 0.5;
-        const headCenterY = headRect.top + headRect.height * 0.18;
+      // 1. CHARACTER VIDEO HOVER SCRUBBING & PERSPECTIVE TILT
+      const ratio = Math.max(0, Math.min(1, e.clientX / window.innerWidth));
+      if (charVideo && charVideo.duration && !isNaN(charVideo.duration)) {
+        targetVideoTime = ratio * charVideo.duration;
+      }
 
-        const dx = e.clientX - headCenterX;
-        const dy = e.clientY - headCenterY;
-
-        const maxRangeX = Math.max(window.innerWidth * 0.45, 320);
-        const maxRangeY = Math.max(window.innerHeight * 0.45, 300);
-
-        const nx = Math.max(-1, Math.min(1, dx / maxRangeX));
-        const ny = Math.max(-1, Math.min(1, dy / maxRangeY));
-
-        // Smoothly rotate neck and tilt head towards mouse cursor
-        head.style.transform = `translate(${nx * 14}px, ${ny * 9}px) rotate(${nx * 11}deg)`;
+      if (charVideo && wrap) {
+        const wrapRect = wrap.getBoundingClientRect();
+        const centerX = wrapRect.left + wrapRect.width * 0.5;
+        const centerY = wrapRect.top + wrapRect.height * 0.35;
+        const dx = (e.clientX - centerX) / Math.max(window.innerWidth * 0.45, 300);
+        const dy = (e.clientY - centerY) / Math.max(window.innerHeight * 0.45, 300);
+        const nx = Math.max(-1, Math.min(1, dx));
+        const ny = Math.max(-1, Math.min(1, dy));
+        charVideo.style.transform = `perspective(900px) rotateY(${nx * 8}deg) rotateX(${-ny * 5}deg) translateY(${ny * 3}px)`;
       }
 
       // 2. POKEBALL SKILLS PROXIMITY EXPANSION
@@ -2918,8 +2981,18 @@
       }
     }
 
+    // Touch Support for Mobile Scrubbing
+    function handleTouchMove(e) {
+      if (reduced || !e.touches || !e.touches[0]) return;
+      const touch = e.touches[0];
+      const ratio = Math.max(0, Math.min(1, touch.clientX / window.innerWidth));
+      if (charVideo && charVideo.duration && !isNaN(charVideo.duration)) {
+        targetVideoTime = ratio * charVideo.duration;
+      }
+    }
+
     function handlePointerLeave() {
-      if (head) head.style.transform = '';
+      if (charVideo) charVideo.style.transform = '';
       if (!isSkillBursting) {
         isNearPoke = false;
         collapseSkills();
@@ -2944,6 +3017,11 @@
           collapseSkills();
         }
       });
+      wrap.addEventListener('click', () => {
+        if (matchMedia('(max-width: 620px)').matches) {
+          triggerSkillBurst(2600);
+        }
+      });
     }
 
     const pokeballZoneEl = document.querySelector('#pokeballZone');
@@ -2954,10 +3032,29 @@
           expandSkills(1);
         }
       });
+      pokeballZoneEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        triggerSkillBurst(2600);
+      });
+    }
+
+    // Mobile Device Orientation (Gyroscope Tilt Scrubbing)
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', (e) => {
+        if (reduced) return;
+        if (e.gamma !== null && typeof e.gamma === 'number') {
+          const tiltRatio = Math.max(0, Math.min(1, (e.gamma + 25) / 50));
+          if (charVideo && charVideo.duration && !isNaN(charVideo.duration)) {
+            targetVideoTime = tiltRatio * charVideo.duration;
+          }
+        }
+      }, { passive: true });
     }
 
     // Global Event Listeners
     window.addEventListener('mousemove', handlePointerMove, { passive: true });
+    window.addEventListener('touchstart', handleTouchMove, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
     document.addEventListener('mouseleave', handlePointerLeave);
     window.addEventListener('scroll', updateProgress, { passive: true });
     updateProgress();
