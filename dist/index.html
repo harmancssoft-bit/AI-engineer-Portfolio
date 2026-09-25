@@ -459,6 +459,19 @@
       will-change: transform;
       -webkit-mask-image: radial-gradient(ellipse 24% 20% at 50% 15%, #000 0 66%, transparent 100%);
       mask-image: radial-gradient(ellipse 24% 20% at 50% 15%, #000 0 66%, transparent 100%);
+      transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.4, 1);
+    }
+    .pokeball-zone {
+      position: absolute;
+      left: 31%;
+      top: 69%;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 12;
+      cursor: pointer;
+      pointer-events: auto;
     }
     .orbit-chip {
       position: absolute;
@@ -476,15 +489,23 @@
       opacity: 0;
       box-shadow: 0 16px 38px rgba(0, 0, 0, .24);
       transform: translate(-50%, -50%) scale(.12);
-      transition: transform .52s cubic-bezier(.19, 1.08, .24, 1), opacity .28s ease, filter .28s ease;
+      transition: transform .52s cubic-bezier(.19, 1.08, .24, 1), opacity .28s ease, filter .28s ease, background .2s ease, border-color .2s ease;
       transition-delay: calc(var(--i, 0) * 38ms);
       will-change: transform, opacity;
       pointer-events: none;
       white-space: nowrap;
     }
     .character-wrap.skill-burst .orbit-chip {
-      opacity: var(--chipOpacity);
+      opacity: var(--chipOpacity, 1);
       filter: drop-shadow(0 12px 24px rgba(255, 232, 196, .22));
+      pointer-events: auto;
+      cursor: default;
+    }
+    .character-wrap.skill-burst .orbit-chip:hover {
+      background: rgba(255, 250, 242, .25);
+      border-color: rgba(255, 255, 255, .7);
+      filter: drop-shadow(0 14px 28px rgba(255, 200, 150, .45));
+      z-index: 25;
     }
     .orbit-chip:nth-of-type(1) { --i: 0; }
     .orbit-chip:nth-of-type(2) { --i: 1; }
@@ -2349,6 +2370,7 @@
             <div class="red-glow"></div>
             <img class="char-img char-body" src="assets/shaggy-character.jpg" alt="3D personal mascot inspired by Harman's character reference">
             <img class="char-img char-head" id="charHead" src="assets/shaggy-character.jpg" alt="">
+            <div class="pokeball-zone" id="pokeballZone" aria-label="Harman Skills Core"></div>
             <span class="orbit-chip">AI Agents</span>
             <span class="orbit-chip">Agentic AI</span>
             <span class="orbit-chip">LangGraph</span>
@@ -2782,21 +2804,163 @@
     const head = document.querySelector('#charHead');
     const about = document.querySelector('#about');
 
-    // Skill Burst Animation
-    function triggerSkillBurst(duration = 1750) {
-      if (reduced || matchMedia('(max-width: 620px)').matches) return;
-      clearTimeout(wrap._burstTimer);
+    // Skill Burst State & Tracking
+    let isSkillBursting = false;
+    let burstTimeout = null;
+    let isNearPoke = false;
+
+    // Trigger skills burst (e.g. initial load intro or explicit trigger)
+    function triggerSkillBurst(duration = 2200) {
+      if (reduced || matchMedia('(max-width: 620px)').matches || !wrap) return;
+      clearTimeout(burstTimeout);
+      isSkillBursting = true;
       wrap.classList.add('skill-burst');
-      wrap.style.setProperty('--orbit', '156px');
+      wrap.style.setProperty('--orbit', '160px');
       wrap.style.setProperty('--chipOpacity', '1');
       wrap.style.setProperty('--chipScale', '1');
-      wrap._burstTimer = setTimeout(() => {
-        wrap.classList.remove('skill-burst');
-        wrap.style.setProperty('--orbit', '92px');
-        wrap.style.setProperty('--chipOpacity', '0');
-        wrap.style.setProperty('--chipScale', '.86');
+      burstTimeout = setTimeout(() => {
+        isSkillBursting = false;
+        if (!isNearPoke) {
+          collapseSkills();
+        }
       }, duration);
     }
+
+    function expandSkills(proximityRatio = 1) {
+      if (reduced || matchMedia('(max-width: 620px)').matches || !wrap) return;
+      clearTimeout(burstTimeout);
+      wrap.classList.add('skill-burst');
+      const orbit = 142 + proximityRatio * 30; // 142px to 172px expansion
+      const scale = 0.94 + proximityRatio * 0.12;
+      wrap.style.setProperty('--orbit', `${orbit}px`);
+      wrap.style.setProperty('--chipOpacity', '1');
+      wrap.style.setProperty('--chipScale', `${scale}`);
+    }
+
+    function collapseSkills() {
+      if (!wrap) return;
+      wrap.classList.remove('skill-burst');
+      wrap.style.setProperty('--orbit', '92px');
+      wrap.style.setProperty('--chipOpacity', '0');
+      wrap.style.setProperty('--chipScale', '.86');
+    }
+
+    // Scroll Progress & Hero 3D Parallax (Zero Blur - Always 100% Crystal Clear)
+    function updateProgress() {
+      if (progressLine) {
+        const max = document.documentElement.scrollHeight - innerHeight;
+        progressLine.style.width = `${max ? (scrollY / max * 100) : 0}%`;
+      }
+
+      if (!reduced && matchMedia('(min-width: 881px)').matches && hero) {
+        const scroll = window.scrollY;
+        const heroH = hero.offsetHeight || window.innerHeight;
+        if (scroll <= heroH) {
+          const p = Math.min(1, scroll / heroH);
+          hero.style.transform = `scale(${1 - p * 0.04}) translateY(${scroll * 0.16}px)`;
+          hero.style.filter = 'none';
+          hero.style.opacity = `${1 - p * 0.28}`;
+        } else {
+          hero.style.transform = `scale(0.96) translateY(${heroH * 0.16}px)`;
+          hero.style.filter = 'none';
+          hero.style.opacity = '0.72';
+        }
+      }
+    }
+
+    // Pointer move handler for 3D Head/Neck Tracking and Pokeball Proximity Detection
+    function handlePointerMove(e) {
+      if (reduced) return;
+
+      // 1. CHARACTER HEAD & NECK TRACKING
+      if (head) {
+        const headRect = head.getBoundingClientRect();
+        // Pivot point at center of character's head/neck
+        const headCenterX = headRect.left + headRect.width * 0.5;
+        const headCenterY = headRect.top + headRect.height * 0.18;
+
+        const dx = e.clientX - headCenterX;
+        const dy = e.clientY - headCenterY;
+
+        const maxRangeX = Math.max(window.innerWidth * 0.45, 320);
+        const maxRangeY = Math.max(window.innerHeight * 0.45, 300);
+
+        const nx = Math.max(-1, Math.min(1, dx / maxRangeX));
+        const ny = Math.max(-1, Math.min(1, dy / maxRangeY));
+
+        // Smoothly rotate neck and tilt head towards mouse cursor
+        head.style.transform = `translate(${nx * 14}px, ${ny * 9}px) rotate(${nx * 11}deg)`;
+      }
+
+      // 2. POKEBALL SKILLS PROXIMITY EXPANSION
+      if (wrap && !matchMedia('(max-width: 620px)').matches) {
+        const wrapRect = wrap.getBoundingClientRect();
+        // Exact center of Pokeball in character image (31% from left, 69% from top)
+        const pokeCenterX = wrapRect.left + wrapRect.width * 0.31;
+        const pokeCenterY = wrapRect.top + wrapRect.height * 0.69;
+
+        const dist = Math.hypot(e.clientX - pokeCenterX, e.clientY - pokeCenterY);
+        // Activation radius covers the Pokeball and immediate surrounding area
+        const activationRadius = Math.max(240, wrapRect.width * 0.62);
+
+        if (dist < activationRadius) {
+          isNearPoke = true;
+          const ratio = Math.max(0, Math.min(1, 1 - (dist / activationRadius)));
+          expandSkills(ratio);
+        } else {
+          if (isNearPoke) {
+            isNearPoke = false;
+            if (!isSkillBursting) {
+              collapseSkills();
+            }
+          }
+        }
+      }
+    }
+
+    function handlePointerLeave() {
+      if (head) head.style.transform = '';
+      if (!isSkillBursting) {
+        isNearPoke = false;
+        collapseSkills();
+      }
+    }
+
+    // Direct Hover Listeners on Character & Pokeball Zone
+    if (wrap) {
+      wrap.addEventListener('mouseenter', () => {
+        if (!matchMedia('(max-width: 620px)').matches) {
+          isNearPoke = true;
+          expandSkills(1);
+        }
+      });
+      wrap.addEventListener('mouseleave', (e) => {
+        const wrapRect = wrap.getBoundingClientRect();
+        const pokeCenterX = wrapRect.left + wrapRect.width * 0.31;
+        const pokeCenterY = wrapRect.top + wrapRect.height * 0.69;
+        const dist = Math.hypot(e.clientX - pokeCenterX, e.clientY - pokeCenterY);
+        if (dist >= 240 && !isSkillBursting) {
+          isNearPoke = false;
+          collapseSkills();
+        }
+      });
+    }
+
+    const pokeballZoneEl = document.querySelector('#pokeballZone');
+    if (pokeballZoneEl) {
+      pokeballZoneEl.addEventListener('mouseenter', () => {
+        if (!matchMedia('(max-width: 620px)').matches) {
+          isNearPoke = true;
+          expandSkills(1);
+        }
+      });
+    }
+
+    // Global Event Listeners
+    window.addEventListener('mousemove', handlePointerMove, { passive: true });
+    document.addEventListener('mouseleave', handlePointerLeave);
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
 
     const preVideo = preloader ? preloader.querySelector('video') : null;
 
@@ -2882,54 +3046,6 @@
         }
       }
       requestAnimationFrame(tick);
-    }
-
-    // Scroll Progress & Hero 3D Parallax (Zero Blur - Always 100% Crystal Clear)
-    function updateProgress() {
-      const max = document.documentElement.scrollHeight - innerHeight;
-      progressLine.style.width = `${max ? (scrollY / max * 100) : 0}%`;
-
-      if (!reduced && matchMedia('(min-width: 881px)').matches && hero) {
-        const scroll = window.scrollY;
-        const heroH = hero.offsetHeight || window.innerHeight;
-        if (scroll <= heroH) {
-          const p = Math.min(1, scroll / heroH);
-          hero.style.transform = `scale(${1 - p * 0.04}) translateY(${scroll * 0.16}px)`;
-          hero.style.filter = 'none';
-          hero.style.opacity = `${1 - p * 0.28}`;
-        } else {
-          hero.style.transform = `scale(0.96) translateY(${heroH * 0.16}px)`;
-          hero.style.filter = 'none';
-          hero.style.opacity = '0.72';
-        }
-      }
-    }
-
-    // Character Head Tracking & Interactive Orbit Expansion
-    function moveCharacter(e) {
-      if (reduced || matchMedia('(max-width: 620px)').matches) return;
-      clearTimeout(wrap._burstTimer);
-      wrap.classList.add('skill-burst');
-      const r = wrap.getBoundingClientRect();
-      const cx = r.left + r.width / 2;
-      const cy = r.top + r.height * .28;
-      const nx = Math.max(-1, Math.min(1, (e.clientX - cx) / (r.width * .44)));
-      const ny = Math.max(-1, Math.min(1, (e.clientY - cy) / (r.height * .34)));
-      const dist = Math.min(1, Math.hypot(nx, ny));
-      const near = Math.max(.46, 1 - dist * .42);
-      head.style.transform = `translate(${nx * 10}px, ${ny * 6}px) rotate(${nx * 9}deg)`;
-      wrap.style.setProperty('--orbit', `${92 + near * 92}px`);
-      wrap.style.setProperty('--chipOpacity', `${.24 + near * .76}`);
-      wrap.style.setProperty('--chipScale', `${.88 + near * .14}`);
-    }
-
-    function resetCharacter() {
-      clearTimeout(wrap._burstTimer);
-      wrap.classList.remove('skill-burst');
-      head.style.transform = '';
-      wrap.style.setProperty('--orbit', '92px');
-      wrap.style.setProperty('--chipOpacity', '0');
-      wrap.style.setProperty('--chipScale', '.86');
     }
 
     // Intersection Observers for Page 2, Timeline, Contact, and Reveals

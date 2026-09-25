@@ -59,6 +59,17 @@ This document records the design, animation, and structural modifications made t
   - Custom slanted pointer tail (`left: 28px;`) pointing naturally toward the 3D character on the left.
   - Smooth vertical float micro-animation (`@keyframes bubbleFloatRight`).
 
+### ⚡ 1.9 Character Head/Neck Tracking & Pokeball Proximity Skills Popover
+- **Interactive 3D Head & Neck Tracking (`#charHead`):**
+  - Active global pointer tracking that calculates cursor angle and proximity relative to the 3D character's head/neck pivot (`transform-origin: 50% 23%`).
+  - Head and neck smoothly rotate and tilt towards the user's cursor across the entire viewport.
+  - Smoothly centers when the cursor leaves the window.
+- **Pokeball Proximity & Skills Expansion (`#pokeballZone`, `.orbit-chip`):**
+  - Added dedicated hotspot and radial proximity detection centered on the Pokeball in Harman's hand (`left: 31%; top: 69%`).
+  - When the cursor enters the Pokeball radius (or hovers over `#characterWrap` / `.pokeball-zone`), the 12 skill pills immediately burst outward and **stay open and fully visible** so the user can inspect and read them.
+  - Interactive skill chips highlight with glowing accent borders on hover (`.orbit-chip:hover`).
+  - When the cursor moves away from the Pokeball radius, the skill pills smoothly retract back into the Pokeball.
+
 ### 📱 1.9 Mobile Skills Visibility & Responsive Optimization
 - **Ambient Floating Orbital Chips on Mobile (`.orbit-chip`):**
   - Removed desktop-only mouse restriction (`display: none` in media query) so the skill badges around Harman's 3D character are **always active, glowing, and floating** on mobile devices.
