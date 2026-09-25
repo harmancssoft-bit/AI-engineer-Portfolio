@@ -1277,42 +1277,143 @@
       .about-sidebar { position: static; }
       .about-pillars-grid { grid-template-columns: repeat(2, 1fr); }
     }
+    /* Hero Mobile Skills Tag Strip */
+    .hero-mobile-skills { display: none; }
+
     @media(max-width: 880px) {
       .pre-links, .nav-links { display: none; }
       .pre-top, .site-nav { grid-template-columns: 1fr auto; }
       .hero {
         grid-template-columns: 1fr;
         min-height: auto;
-        padding-top: 112px;
+        padding: 96px 20px 48px;
         position: relative;
+        gap: 32px;
       }
-      .hero-stage { min-height: 540px; order: -1; }
-      .character-wrap { width: min(88vw, 500px); min-width: 280px; }
+      .hero-stage {
+        min-height: 480px;
+        order: 0;
+        margin: 12px 0;
+      }
+      .character-wrap {
+        width: min(88vw, 420px);
+        min-width: 280px;
+        opacity: 1;
+        transform: scale(1);
+      }
+      
+      /* Mobile Skills Tag Badges */
+      .hero-mobile-skills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 20px;
+      }
+      .m-skill-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 240, 225, 0.25);
+        color: #fff8ef;
+        font-size: .76rem;
+        font-weight: 800;
+        letter-spacing: .02em;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, .2);
+      }
+
+      /* Mobile Continuous Ambient Floating Skills Orbit Around Character */
+      .orbit-chip {
+        opacity: 0.96 !important;
+        font-size: .68rem !important;
+        font-weight: 850 !important;
+        padding: 6px 12px !important;
+        background: rgba(26, 12, 8, 0.82) !important;
+        backdrop-filter: blur(14px) !important;
+        border: 1px solid rgba(255, 235, 215, 0.4) !important;
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5) !important;
+        color: #fff8ef !important;
+        pointer-events: auto !important;
+        animation: mobileOrbitBob 4s ease-in-out infinite alternate !important;
+        transform: none !important;
+      }
+      .orbit-chip:nth-of-type(odd) {
+        animation-duration: 4.6s !important;
+        animation-delay: -1.5s !important;
+      }
+      .orbit-chip:nth-of-type(even) {
+        animation-duration: 3.8s !important;
+        animation-delay: -0.7s !important;
+      }
+      
+      /* Mobile Orbit Positions Around Character */
+      .orbit-chip:nth-of-type(1)  { left: 4%; top: 16%; }
+      .orbit-chip:nth-of-type(2)  { right: 4%; left: auto; top: 14%; }
+      .orbit-chip:nth-of-type(3)  { left: 0%; top: 32%; }
+      .orbit-chip:nth-of-type(4)  { right: 0%; left: auto; top: 30%; }
+      .orbit-chip:nth-of-type(5)  { left: 2%; top: 48%; }
+      .orbit-chip:nth-of-type(6)  { right: 2%; left: auto; top: 46%; }
+      .orbit-chip:nth-of-type(7)  { left: 2%; top: 64%; }
+      .orbit-chip:nth-of-type(8)  { right: 2%; left: auto; top: 62%; }
+      .orbit-chip:nth-of-type(9)  { left: 6%; top: 80%; }
+      .orbit-chip:nth-of-type(10) { right: 6%; left: auto; top: 78%; }
+      .orbit-chip:nth-of-type(11) { left: 50%; top: 92%; transform: translateX(-50%) !important; }
+      .orbit-chip:nth-of-type(12) { display: none; }
+
       .about-grid, .projects-grid { grid-template-columns: 1fr; grid-auto-flow: row; }
       .about-pillars-grid { grid-template-columns: 1fr; }
       .project-card.astravi, .project-card.personal, .project-card.sense { grid-column: auto; grid-row: auto; }
       .skills-grid { grid-template-columns: repeat(2, 1fr); }
       .section-intro { display: block; }
       .section-intro p { margin-top: 18px; }
+      .stat-strip {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 16px;
+      }
+      .stat {
+        font-size: .74rem;
+        padding: 7px 14px;
+      }
     }
+
+    @keyframes mobileOrbitBob {
+      0% { transform: translateY(0) scale(0.95); }
+      100% { transform: translateY(-8px) scale(1.03); filter: drop-shadow(0 6px 18px rgba(255, 180, 140, 0.5)); }
+    }
+
     @media(max-width: 620px) {
       .preloader { padding: 18px; }
       .pre-bottom { grid-template-columns: 1fr; }
       .percent { justify-self: end; }
-      .pre-skill, .orbit-chip { display: none; }
+      .pre-skill { display: none; }
       .site-nav { left: 12px; right: 12px; top: 12px; }
       .brand span:last-child { display: none; }
-      .hero { padding: 92px 18px 106px; }
-      h1 { font-size: clamp(3.1rem, 18vw, 5.6rem); }
+      .hero { padding: 88px 16px 36px; }
+      h1 { font-size: clamp(2.6rem, 13vw, 4.2rem); }
       #about {
         margin-top: 0;
         padding-top: 42px;
         border-radius: 28px 28px 0 0;
       }
       .about-metric-bar { grid-template-columns: 1fr; }
-      .stat-strip { grid-template-columns: 1fr; }
-      section:not(.hero) { padding: 76px 18px; }
-      .role { padding-left: 48px; }
+      .stat-strip {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+      }
+      .stat {
+        font-size: .70rem;
+        padding: 6px 11px;
+      }
+      section:not(.hero) { padding: 64px 16px; }
+      .role { padding-left: 36px; }
       .skills-grid { grid-template-columns: 1fr; }
       .pre-speech-bubble {
         top: -8px;
@@ -1320,6 +1421,21 @@
         padding: 7px 14px;
         font-size: .74rem;
       }
+      .orbit-chip {
+        font-size: .62rem !important;
+        padding: 5px 9px !important;
+      }
+      .orbit-chip:nth-of-type(1)  { left: 2%; top: 14%; }
+      .orbit-chip:nth-of-type(2)  { right: 2%; left: auto; top: 12%; }
+      .orbit-chip:nth-of-type(3)  { left: -2%; top: 29%; }
+      .orbit-chip:nth-of-type(4)  { right: -2%; left: auto; top: 27%; }
+      .orbit-chip:nth-of-type(5)  { left: 0%; top: 45%; }
+      .orbit-chip:nth-of-type(6)  { right: 0%; left: auto; top: 43%; }
+      .orbit-chip:nth-of-type(7)  { left: 0%; top: 61%; }
+      .orbit-chip:nth-of-type(8)  { right: 0%; left: auto; top: 59%; }
+      .orbit-chip:nth-of-type(9)  { left: 4%; top: 77%; }
+      .orbit-chip:nth-of-type(10) { right: 4%; left: auto; top: 75%; }
+      .orbit-chip:nth-of-type(11) { left: 50%; top: 90%; transform: translateX(-50%) !important; }
     }
     /* ==========================================================================
        HARMAN AI CAREER CHATBOT STYLES
@@ -1833,6 +1949,15 @@
             <a class="button primary" href="#projects">View Projects</a>
             <a class="button" href="assets/Harman-Papneja-Resume.pdf" download>Download Resume</a>
             <a class="button" href="https://www.linkedin.com/in/harman-papneja" target="_blank" rel="noreferrer">LinkedIn</a>
+          </div>
+          <div class="hero-mobile-skills" aria-label="Core AI Stack">
+            <span class="m-skill-tag">⚡ LangGraph</span>
+            <span class="m-skill-tag">🧠 Agentic AI</span>
+            <span class="m-skill-tag">📊 RAG Systems</span>
+            <span class="m-skill-tag">🚀 FastAPI</span>
+            <span class="m-skill-tag">🛡️ Guardrails</span>
+            <span class="m-skill-tag">🗄️ Vector DBs</span>
+            <span class="m-skill-tag">🐍 Python / Pydantic</span>
           </div>
         </div>
 
