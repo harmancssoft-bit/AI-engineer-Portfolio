@@ -68,6 +68,20 @@ This document records the design, animation, and structural modifications made t
 - **Responsive Stat Strip & Card Grids:**
   - Stat pills wrap gracefully without vertical bloat, and all capability cards, timelines, and skills groups stack with optimal mobile touch padding.
 
+### ✍️ 1.10 Mobile Typography, Readability & Responsive Content Presentation
+- **Isolated to Mobile Media Queries (`<= 880px`, `<= 620px`, `<= 420px`):**
+  - Desktop styles, layout, spacing, animations, and typography remain **100% untouched and identical**.
+  - **Headlines (`h1`, `h2`, `.about-lede`):** Tuned line-heights (`1.02 - 1.08`) and fluid clamp sizing avoiding awkward word wraps or clipped letters on mobile screens.
+  - **Paragraphs & Body Text:** Optimized font sizing (`0.80rem - 0.94rem`) and line spacing (`1.52 - 1.62`) for maximum reading comfort on mobile screens.
+  - **Touch Targets & Actions:** Buttons and pills sized with proper touch target padding (`min-height: 40px`).
+  - **Card & Grid Spacing:** Capability cards, project cards, and skills groups stack naturally with breathable margins and zero horizontal overflow.
+
+### ⚡ 1.11 60/120fps Butter-Smooth Loading Percentage Count-Up Fix
+- **Continuous High-Framerate Lerp Interpolation:**
+  - Replaced stepped coarse `<video>` time updates with a high-precision `performance.now()` continuous monotonic exponential interpolation.
+  - Percentage counts up steadily frame-by-frame (0% → 100%) without freezing, stutter, jumps, or lag.
+  - Slide-in of name (`HARMAN PAPNEJA -23`) and curtain exit trigger smoothly and on time.
+
 ---
 
 ## 2. How to Revert or Adjust Specific Features
