@@ -549,6 +549,8 @@
       margin-top: 0;
       margin-bottom: 2px;
     }
+    .stat-txt-short { display: none; }
+    .stat-txt-full { display: inline; }
     .stat {
       display: flex;
       gap: 9px;
@@ -1401,34 +1403,51 @@
         text-align: center;
       }
 
-      /* Single-Row Horizontal Scrollable Stat Strip */
+      /* 3 Above, 2 Below Grid on Mobile - Zero Horizontal Scrolling */
+      .stat-txt-short { display: inline; }
+      .stat-txt-full { display: none; }
       .stat-strip {
-        display: flex;
-        flex-wrap: nowrap;
-        overflow-x: auto;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
         gap: 6px;
         width: 100%;
-        margin-top: 10px;
-        padding: 2px 2px 6px;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
+        margin-top: 14px;
+        padding: 0;
+        overflow: visible;
       }
-      .stat-strip::-webkit-scrollbar { display: none; }
-      .stat {
-        flex: 0 0 auto;
-        min-height: 34px;
+      .stat:nth-child(1),
+      .stat:nth-child(2),
+      .stat:nth-child(3) {
+        grid-column: span 2;
+        font-size: .68rem;
+        font-weight: 800;
+        padding: 7px 4px;
+        justify-content: center;
+        text-align: center;
+        white-space: nowrap;
+      }
+      .stat:nth-child(4),
+      .stat:nth-child(5) {
+        grid-column: span 3;
         font-size: .70rem;
         font-weight: 800;
-        padding: 6px 11px;
+        padding: 7px 8px;
+        justify-content: center;
+        text-align: center;
+        white-space: nowrap;
+      }
+      .stat {
+        flex: none;
+        min-height: 34px;
         border-radius: 999px;
         background: rgba(0, 0, 0, 0.35);
         backdrop-filter: blur(12px);
         border: 1px solid rgba(255, 240, 225, 0.22);
         color: #fff2e4;
-        white-space: nowrap;
-      }
-      .stat:nth-child(5) {
-        grid-column: auto;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        box-sizing: border-box;
       }
 
       /* Hero Stage & Mascot */
@@ -1585,11 +1604,40 @@
       .orbit-chip:nth-of-type(10) { right: 3%; left: auto; top: 75%; }
       .orbit-chip:nth-of-type(11) { left: 50%; top: 91%; transform: translateX(-50%) !important; }
 
-      .stat-strip { gap: 5px; margin-top: 8px; }
+      .stat-strip {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 6px;
+        margin-top: 12px;
+        width: 100%;
+        padding: 0;
+        overflow: visible;
+      }
+      .stat:nth-child(1),
+      .stat:nth-child(2),
+      .stat:nth-child(3) {
+        grid-column: span 2;
+        font-size: .63rem;
+        padding: 6px 3px;
+        justify-content: center;
+        text-align: center;
+      }
+      .stat:nth-child(4),
+      .stat:nth-child(5) {
+        grid-column: span 3;
+        font-size: .66rem;
+        padding: 6px 6px;
+        justify-content: center;
+        text-align: center;
+      }
       .stat {
         min-height: 32px;
-        font-size: .67rem;
-        padding: 5px 9px;
+        gap: 4px;
+      }
+      .stat i {
+        width: 6px;
+        height: 6px;
+        flex: 0 0 auto;
       }
 
       /* Section Foundations */
@@ -1744,8 +1792,29 @@
       .dek { font-size: .78rem; line-height: 1.46; }
       .actions { flex-direction: row; gap: 5px; }
       .actions .button { font-size: .70rem; padding: 8px 10px; min-width: 80px; }
-      .stat-strip { gap: 5px; }
-      .stat { font-size: .62rem; padding: 4px 8px; min-height: 28px; }
+      .stat-strip {
+        gap: 5px;
+        margin-top: 10px;
+      }
+      .stat:nth-child(1),
+      .stat:nth-child(2),
+      .stat:nth-child(3) {
+        font-size: .57rem;
+        padding: 5px 2px;
+      }
+      .stat:nth-child(4),
+      .stat:nth-child(5) {
+        font-size: .60rem;
+        padding: 5px 4px;
+      }
+      .stat {
+        min-height: 28px;
+        gap: 3px;
+      }
+      .stat i {
+        width: 5px;
+        height: 5px;
+      }
       .hero-stage { min-height: 300px; }
       .character-wrap { width: min(88vw, 260px); }
       .orbit-chip { font-size: .55rem !important; padding: 3px 6px !important; }
@@ -2303,11 +2372,11 @@
         </aside>
 
         <div class="stat-strip" aria-label="Career highlights">
-          <div class="stat"><i></i>2+ years experience</div>
-          <div class="stat"><i></i>2.2M+ calls/year automated</div>
-          <div class="stat"><i></i>99.9% backend uptime</div>
-          <div class="stat"><i></i>90%+ human-benchmark alignment</div>
-          <div class="stat"><i></i>FastAPI & LangGraph</div>
+          <div class="stat"><i></i><span class="stat-txt-short">2+ yrs exp</span><span class="stat-txt-full">2+ years experience</span></div>
+          <div class="stat"><i></i><span class="stat-txt-short">2.2M+ calls/yr</span><span class="stat-txt-full">2.2M+ calls/year automated</span></div>
+          <div class="stat"><i></i><span class="stat-txt-short">99.9% uptime</span><span class="stat-txt-full">99.9% backend uptime</span></div>
+          <div class="stat"><i></i><span class="stat-txt-short">90%+ alignment</span><span class="stat-txt-full">90%+ human-benchmark alignment</span></div>
+          <div class="stat"><i></i><span>FastAPI &amp; LangGraph</span></div>
         </div>
       </section>
     </div>
