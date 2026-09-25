@@ -2374,7 +2374,7 @@
         <div class="hero-stage" aria-label="Cursor tracking character">
           <div class="character-wrap" id="characterWrap">
             <div class="red-glow"></div>
-            <video class="char-video" id="charVideo" playsinline muted preload="auto" poster="assets/shaggy-character.jpg">
+            <video class="char-video" id="charVideo" autoplay loop playsinline muted preload="auto" poster="assets/shaggy-character.jpg">
               <source src="assets/character_waving_and_turning.mp4" type="video/mp4">
             </video>
             <div class="pokeball-zone" id="pokeballZone" aria-label="Harman Skills Core"></div>
@@ -2811,86 +2811,18 @@
     const charVideo = document.querySelector('#charVideo');
     const about = document.querySelector('#about');
 
-    // Video Scrubbing & Hover Tracking System
-    let isSeeking = false;
-    let pendingSeekTime = null;
-    let targetVideoTime = 0;
-    let currentVideoTime = 0;
-    let lastSeekAt = 0;
-    const mobileHero = () => matchMedia('(max-width: 880px)').matches;
-
-    function seekVideo(time) {
-      if (!charVideo || !charVideo.duration || isNaN(charVideo.duration)) return;
-      const clamped = Math.max(0, Math.min(charVideo.duration - 0.04, time));
-
-      if (isSeeking) {
-        pendingSeekTime = clamped;
-        return;
-      }
-
-      if (Math.abs(charVideo.currentTime - clamped) < 0.015) return;
-
-      const now = performance.now();
-      if (now - lastSeekAt < 24) {
-        pendingSeekTime = clamped;
-        return;
-      }
-
-      isSeeking = true;
-      lastSeekAt = now;
-      if ('fastSeek' in charVideo) {
-        try {
-          charVideo.fastSeek(clamped);
-        } catch (e) {
-          charVideo.currentTime = clamped;
-        }
-      } else {
-        charVideo.currentTime = clamped;
-      }
-    }
+    // Native video playback keeps the decoder smooth on desktop and mobile.
 
     if (charVideo) {
-      charVideo.pause();
+      charVideo.loop = true;
+      charVideo.autoplay = true;
       charVideo.addEventListener('loadedmetadata', () => {
-        targetVideoTime = 0;
-        currentVideoTime = 0;
-        if (mobileHero()) {
-          charVideo.loop = true;
-          charVideo.play().catch(() => {});
-        } else {
-          seekVideo(0);
-        }
+        if (!reduced) charVideo.play().catch(() => {});
       });
-      charVideo.addEventListener('seeked', () => {
-        isSeeking = false;
-        if (pendingSeekTime !== null) {
-          const t = pendingSeekTime;
-          pendingSeekTime = null;
-          seekVideo(t);
-        }
-      });
-      if (charVideo.readyState >= 1) {
-        if (mobileHero()) {
-          charVideo.loop = true;
-          charVideo.play().catch(() => {});
-        } else {
-          seekVideo(0);
-        }
+      if (charVideo.readyState >= 1 && !reduced) {
+        charVideo.play().catch(() => {});
       }
     }
-
-    // Continuous 60fps smoothing loop for responsive, jitter-free video tracking
-    function videoRenderLoop() {
-      if (charVideo && charVideo.duration && !isNaN(charVideo.duration)) {
-        const diff = targetVideoTime - currentVideoTime;
-        if (Math.abs(diff) > 0.003) {
-          currentVideoTime += diff * 0.22;
-          seekVideo(currentVideoTime);
-        }
-      }
-      requestAnimationFrame(videoRenderLoop);
-    }
-    requestAnimationFrame(videoRenderLoop);
 
     // Skill Burst State & Tracking
     let isSkillBursting = false;
@@ -2960,13 +2892,8 @@
     function handlePointerMove(e) {
       if (reduced) return;
 
-      // 1. CHARACTER VIDEO HOVER SCRUBBING & PERSPECTIVE TILT
-      const ratio = Math.max(0, Math.min(1, e.clientX / window.innerWidth));
-      if (!mobileHero() && charVideo && charVideo.duration && !isNaN(charVideo.duration)) {
-        targetVideoTime = ratio * charVideo.duration;
-      }
-
-      if (!mobileHero() && charVideo && wrap) {
+      // 1. CHARACTER VIDEO PERSPECTIVE TILT
+      if (charVideo && wrap) {
         const wrapRect = wrap.getBoundingClientRect();
         const centerX = wrapRect.left + wrapRect.width * 0.5;
         const centerY = wrapRect.top + wrapRect.height * 0.35;
@@ -3000,16 +2927,6 @@
             }
           }
         }
-      }
-    }
-
-    // Touch Support for Mobile Scrubbing
-    function handleTouchMove(e) {
-      if (reduced || mobileHero() || !e.touches || !e.touches[0]) return;
-      const touch = e.touches[0];
-      const ratio = Math.max(0, Math.min(1, touch.clientX / window.innerWidth));
-      if (charVideo && charVideo.duration && !isNaN(charVideo.duration)) {
-        targetVideoTime = ratio * charVideo.duration;
       }
     }
 
@@ -3060,23 +2977,8 @@
       });
     }
 
-    // Mobile Device Orientation (Gyroscope Tilt Scrubbing)
-    if (window.DeviceOrientationEvent) {
-      window.addEventListener('deviceorientation', (e) => {
-        if (reduced || mobileHero()) return;
-        if (e.gamma !== null && typeof e.gamma === 'number') {
-          const tiltRatio = Math.max(0, Math.min(1, (e.gamma + 25) / 50));
-          if (charVideo && charVideo.duration && !isNaN(charVideo.duration)) {
-            targetVideoTime = tiltRatio * charVideo.duration;
-          }
-        }
-      }, { passive: true });
-    }
-
     // Global Event Listeners
     window.addEventListener('mousemove', handlePointerMove, { passive: true });
-    window.addEventListener('touchstart', handleTouchMove, { passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { passive: true });
     document.addEventListener('mouseleave', handlePointerLeave);
     window.addEventListener('scroll', updateProgress, { passive: true });
     updateProgress();
