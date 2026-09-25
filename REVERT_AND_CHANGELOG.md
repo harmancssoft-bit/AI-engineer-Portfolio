@@ -59,6 +59,15 @@ This document records the design, animation, and structural modifications made t
   - Custom slanted pointer tail (`left: 28px;`) pointing naturally toward the 3D character on the left.
   - Smooth vertical float micro-animation (`@keyframes bubbleFloatRight`).
 
+### 📱 1.9 Mobile Skills Visibility & Responsive Optimization
+- **Ambient Floating Orbital Chips on Mobile (`.orbit-chip`):**
+  - Removed desktop-only mouse restriction (`display: none` in media query) so the skill badges around Harman's 3D character are **always active, glowing, and floating** on mobile devices.
+  - Distinct mobile orbital layout (`@keyframes mobileOrbitBob`) with staggered animation timing and glassmorphic contrast.
+- **Hero Mobile Skills Strip (`.hero-mobile-skills`):**
+  - Added a responsive quick-access skill badge cluster below the action buttons (*⚡ LangGraph • 🧠 Agentic AI • 📊 RAG Systems • 🚀 FastAPI • 🛡️ Guardrails • 🗄️ Vector DBs • 🐍 Python / Pydantic*).
+- **Responsive Stat Strip & Card Grids:**
+  - Stat pills wrap gracefully without vertical bloat, and all capability cards, timelines, and skills groups stack with optimal mobile touch padding.
+
 ---
 
 ## 2. How to Revert or Adjust Specific Features
