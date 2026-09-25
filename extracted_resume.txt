@@ -1,0 +1,68 @@
+HARMAN PAPNEJA
+AI Software Engineer | Agentic Systems & Backend AI Infrastructure
+harman.papneja.631@gmail.com | +91 8569900100 | Ambala, Haryana, India | linkedin.com/in/harman-papneja
+PROFESSIONAL SUMMARY
+AI Software Engineer with 2+ years of experience building production Agentic AI systems using Python, LLMs, LangChain/LangGraph, 
+FastAPI, and Retrieval-Augmented Generation (RAG). Skilled in designing tool-use logic that lets LLMs interact with  
+PostgreSQL/pgvector-backed databases and internal APIs, enforcing strict structured output via Pydantic to keep autonomous agents  
+schema-safe. Experienced with asynchronous Python (Asyncio), REST APIs (Flask/FastAPI), MongoDB, and end-to-end LLM  
+evaluation pipelines achieving 90%+ accuracy against human benchmarks, while scaling AI backends to 2.2M+ records annually at  
+99.9% uptime.
+TECHNICAL SKILLS
+Programming Languages: Python (Asyncio, Pydantic), SQL (PostgreSQL, MySQL), NoSQL (MongoDB)
+Generative AI / LLM: Large Language Models (LLM), OpenAI, Groq, Google GenAI SDK, Prompt Engineering, Chain-of-Thought 
+(CoT) Prompting, Retrieval-Augmented Generation (RAG), Structured Output (Pydantic), Vision-Language Models (VLM), Context-
+Window Management, Context Caching, LLM Guardrails, Semantic Analysis
+Agentic AI & Orchestration: LangChain, LangChain Expression Language (LCEL), LangGraph, Agentic Workflows, Autonomous 
+Agents, Function/Tool Calling, Agentic Routing, Recommendation Systems
+ML / Data & Vector Databases: TensorFlow, Scikit-learn, PyTorch (working knowledge), Pandas, NumPy, HuggingFace, pgvector, 
+Pinecone, ChromaDB
+Backend & Infrastructure: FastAPI, Flask, REST APIs, PostgreSQL, JSON-Schema Validation, MongoDB, Event-Driven 
+Architecture, Background Jobs, Tavily Search API, Playwright, Asynchronous Processing
+PROFESSIONAL EXPERIENCE
+AI Engineer, CSsoft Solutions Aug 2026 – Present
+Astravi — AI-Driven Employee-Work Intelligence & Recommendation Platform
+● Developing Astravi, an AI-driven employee-work intelligence platform that converts minute-level activity signals and VLM-
+based screenshot captions into semantic task summaries and privacy-safe productivity recommendations, using Python and  
+LangChain.
+● Designed a resilient screenshot-captioning pipeline with unique screenshot identities, MongoDB checkpointing, and  
+retry/resume logic, enabling fault-tolerant processing of high-volume activity data.
+● Built a decision AI agent that governs the recommendation flow, determining when a real opportunity exists before triggering 
+generation and suppressing false signals from idle or self-generated UI states.
+● Engineered a privacy-by-design recommendation architecture (current_work, TaskSummary, RecommendationDecision)  
+integrated with Search APIs, stripping sensitive values, URLs, and identifiers before LLM-based generation.
+AI Software Engineer, Altruist Technologies May 2024 – Aug 2026
+SENSE AI — Call Audit & Sentiment Automation
+● Architected a high-throughput Generative AI backend in Python, scaling call-audit automation to 2.2M+ calls/year at 99.9%  
+uptime.
+● Cut API token costs and latency via a custom context-caching layer, persisting structured LLM evaluation logs in MongoDB.
+● Improved automated QA alignment to 90%+ vs. human benchmarks using dynamic prompt engineering (CoT + Gamma-style 
+constraints) to evaluate intent and behavior via LLMs.
+● Built structured AI coaching pipelines with strict Pydantic/JSON-Schema outputs, autonomously surfacing conversational gaps 
+and soft-skill coaching recommendations.
+● Cut false-positive compliance flags by 80% via logic-verification constraints in the model workflow, informing recovery  
+strategies for clients including Bank of Baroda, Razorpay, and Magnificat.
+SENSE AI — Agentic Email Orchestration (LangGraph)
+● Engineered an autonomous agentic AI workflow using LangGraph and Python/Flask to orchestrate multi-turn email context (up 
+to 5 threads), generating next steps, replies, and summaries with <3s latency.
+● Implemented agentic routing and tool calling via the Tavily Search API, letting the agent verify drafted facts against real-time 
+web data and prevent LLM hallucination.
+● Achieved 100% data-extraction accuracy on missing draft fields via dynamic, few-shot Gamma prompts with strict JSON-
+Schema validation for frontend integration.
+● Optimized backend throughput via asynchronous Python (Asyncio) processing and thread-truncation, managing the LLM  
+context window to cut per-request cost and latency.
+PERSONAL PROJECTS
+Agentic Job Applier  Python, LangChain (LCEL), LangGraph, FastAPI, Llama 3.3 (Groq), Playwright, ChromaDB, HuggingFace
+● Built an end-to-end autonomous AI agent using LangChain Expression Language (LCEL) to source, evaluate, and apply to job 
+roles with full autonomy.
+● Architected a dual-layer RAG “Career Brain” using ChromaDB (vector database) and HuggingFace embeddings, with sub-
+second inference via Llama 3.3 (70B) on Groq for real-time JD-to-resume matching.
+● Developed a Playwright-based web-automation layer with cookie injection to bypass MFA/bot-detection, plus state-aware  
+verification for complex DOM structures.
+● Implemented a self-learning memory layer that persists novel form data (notice period, CTC, etc.) and normalizes URLs,  
+enabling 0% manual re-entry and eliminating duplicate processing.
+EDUCATION & CERTIFICATIONS
+Bachelor of Computer Science and Engineering — Chitkara University 2020 – 2024
+CGPA: 9.48 / 10
+Certifications: PG Program in Data Science & Analytics – Imarticus Learning; Advanced Data Analytics – Google; Data Science 
+with Python – Simplilearn.
