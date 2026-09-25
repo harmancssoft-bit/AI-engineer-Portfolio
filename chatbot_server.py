@@ -113,6 +113,11 @@ PERSONAL PROJECTS & R&D:
 - Experimental R&D playground exploring multi-agent memory and deterministic graphs on personal time.
 - Note: Harman is actively seeking full-time AI Software Engineer roles.
 
+4. Harman's AI Portfolio & LangGraph Assistant:
+- Originally created by different LLMs with the best prompt engineering, demonstrating how AI engineers orchestrate foundation models into high-craft production assets.
+- Built with a LangGraph StateGraph decision workflow, Groq high-speed LPU inference, and strict domain guardrails.
+- Features cinematic 3D mascot animations, ambient floating skill chips, and responsive layouts tailored for desktop and mobile.
+
 EDUCATION & CERTIFICATIONS:
 - Bachelor of Computer Science and Engineering — Chitkara University (2020 – 2024)
   CGPA: 9.48 / 10

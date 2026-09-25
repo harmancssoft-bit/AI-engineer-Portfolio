@@ -82,6 +82,16 @@ This document records the design, animation, and structural modifications made t
   - Percentage counts up steadily frame-by-frame (0% → 100%) without freezing, stutter, jumps, or lag.
   - Slide-in of name (`HARMAN PAPNEJA -23`) and curtain exit trigger smoothly and on time.
 
+### 📱 1.12 Mobile Hero Redesign & "Originally Created by Different LLMs" Kick Line
+- **High-Impact AI Kick Line:**
+  - Added *"✨ Originally created by different LLMs with the best prompt engineering"* as a glowing top badge in the hero section (`.ai-craft-badge`) and in the preloader screen bottom (`.pre-ai-tag`).
+  - Integrated into the LangGraph Career Chatbot welcome message and quick prompt pills.
+- **Mobile Hero Screen Rebalancing:**
+  - **No 100% Stretched Button Stacks:** Transformed action buttons into a compact horizontal flex row (`View Projects` + `Resume` + `LinkedIn`).
+  - **3D Mascot Prominence:** Positioned the 3D character and its continuous ambient glowing orbital skill chips directly inside the primary mobile viewport rather than burying it below long button lists.
+  - **Dashboard Stat Grid:** Stat strip formatted into a clean 2-column executive metrics dashboard with pulsing ruby radar dots (`2.2M+ calls/yr`, `99.9% uptime`, `90%+ alignment`, etc.).
+  - **Desktop Safety:** 100% of desktop styles, layout, and spacing preserved without any changes.
+
 ---
 
 ## 2. How to Revert or Adjust Specific Features
