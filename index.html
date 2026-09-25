@@ -2816,6 +2816,8 @@
     let pendingSeekTime = null;
     let targetVideoTime = 0;
     let currentVideoTime = 0;
+    let lastSeekAt = 0;
+    const mobileHero = () => matchMedia('(max-width: 880px)').matches;
 
     function seekVideo(time) {
       if (!charVideo || !charVideo.duration || isNaN(charVideo.duration)) return;
@@ -2828,7 +2830,14 @@
 
       if (Math.abs(charVideo.currentTime - clamped) < 0.015) return;
 
+      const now = performance.now();
+      if (now - lastSeekAt < 24) {
+        pendingSeekTime = clamped;
+        return;
+      }
+
       isSeeking = true;
+      lastSeekAt = now;
       if ('fastSeek' in charVideo) {
         try {
           charVideo.fastSeek(clamped);
@@ -2845,7 +2854,12 @@
       charVideo.addEventListener('loadedmetadata', () => {
         targetVideoTime = 0;
         currentVideoTime = 0;
-        seekVideo(0);
+        if (mobileHero()) {
+          charVideo.loop = true;
+          charVideo.play().catch(() => {});
+        } else {
+          seekVideo(0);
+        }
       });
       charVideo.addEventListener('seeked', () => {
         isSeeking = false;
@@ -2855,6 +2869,14 @@
           seekVideo(t);
         }
       });
+      if (charVideo.readyState >= 1) {
+        if (mobileHero()) {
+          charVideo.loop = true;
+          charVideo.play().catch(() => {});
+        } else {
+          seekVideo(0);
+        }
+      }
     }
 
     // Continuous 60fps smoothing loop for responsive, jitter-free video tracking
@@ -2940,11 +2962,11 @@
 
       // 1. CHARACTER VIDEO HOVER SCRUBBING & PERSPECTIVE TILT
       const ratio = Math.max(0, Math.min(1, e.clientX / window.innerWidth));
-      if (charVideo && charVideo.duration && !isNaN(charVideo.duration)) {
+      if (!mobileHero() && charVideo && charVideo.duration && !isNaN(charVideo.duration)) {
         targetVideoTime = ratio * charVideo.duration;
       }
 
-      if (charVideo && wrap) {
+      if (!mobileHero() && charVideo && wrap) {
         const wrapRect = wrap.getBoundingClientRect();
         const centerX = wrapRect.left + wrapRect.width * 0.5;
         const centerY = wrapRect.top + wrapRect.height * 0.35;
@@ -2983,7 +3005,7 @@
 
     // Touch Support for Mobile Scrubbing
     function handleTouchMove(e) {
-      if (reduced || !e.touches || !e.touches[0]) return;
+      if (reduced || mobileHero() || !e.touches || !e.touches[0]) return;
       const touch = e.touches[0];
       const ratio = Math.max(0, Math.min(1, touch.clientX / window.innerWidth));
       if (charVideo && charVideo.duration && !isNaN(charVideo.duration)) {
@@ -3041,7 +3063,7 @@
     // Mobile Device Orientation (Gyroscope Tilt Scrubbing)
     if (window.DeviceOrientationEvent) {
       window.addEventListener('deviceorientation', (e) => {
-        if (reduced) return;
+        if (reduced || mobileHero()) return;
         if (e.gamma !== null && typeof e.gamma === 'number') {
           const tiltRatio = Math.max(0, Math.min(1, (e.gamma + 25) / 50));
           if (charVideo && charVideo.duration && !isNaN(charVideo.duration)) {
