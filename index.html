@@ -343,43 +343,18 @@
       letter-spacing: .16em;
       text-transform: uppercase;
     }
-    .hero-split-grid {
-      display: block;
+    h1 {
+      font-family: "Space Grotesk", Inter, sans-serif;
+      font-size: var(--display);
+      line-height: .86;
+      letter-spacing: -.085em;
       margin: 18px 0 18px;
-    }
-    .hero-split-left {
-      display: inline;
-    }
-    .hero-split-left h1 {
-      display: inline;
-      font-family: "Space Grotesk", Inter, sans-serif;
-      font-size: var(--display);
-      line-height: .86;
-      letter-spacing: -.085em;
-      margin: 0;
       font-weight: 900;
-      color: inherit;
-    }
-    .mobile-break {
-      display: none;
-    }
-    .hero-split-right {
-      display: inline;
-    }
-    .hero-tagline {
-      display: inline;
-      font-family: "Space Grotesk", Inter, sans-serif;
-      font-size: var(--display);
-      line-height: .86;
-      letter-spacing: -.085em;
-      font-weight: 900;
-      margin: 0;
-      color: inherit;
+      max-width: 10ch;
     }
     .dek {
-      display: block;
       max-width: 580px;
-      margin: 18px 0 0;
+      margin: 0;
       color: #ead9ca;
       font-size: clamp(.95rem, 1.25vw, 1.15rem);
       line-height: 1.58;
@@ -1367,9 +1342,9 @@
       .hero {
         grid-template-columns: 1fr;
         min-height: auto;
-        padding: 82px 16px 28px;
+        padding: 86px 18px 32px;
         position: relative;
-        gap: 14px;
+        gap: 18px;
       }
       .hero-copy {
         max-width: 100%;
@@ -1377,102 +1352,56 @@
       }
       .ai-craft-badge {
         font-size: .67rem;
-        padding: 5px 11px;
+        padding: 5px 12px;
         line-height: 1.35;
         max-width: 100%;
         margin-bottom: 8px;
       }
       .eyebrow {
-        font-size: .64rem;
+        font-size: .65rem;
         padding: 4px 10px;
         letter-spacing: .12em;
-        margin-bottom: 6px;
+        margin-bottom: 8px;
       }
 
-      /* Mobile Split Header Layout (Left: Big 'I build AI', Right: Tagline & Bio) */
-      .hero-split-grid {
-        display: grid;
-        grid-template-columns: minmax(130px, .92fr) minmax(160px, 1.25fr);
-        gap: 12px;
-        align-items: center;
-        margin: 10px 0 12px;
-        padding: 12px 14px;
-        border-radius: 18px;
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 235, 215, 0.16);
-        backdrop-filter: blur(10px);
-      }
-      .hero-split-left {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-      .hero-split-left h1 {
-        display: block;
-        font-size: clamp(2.3rem, 9.5vw, 3.2rem);
+      /* Big Bold Headline with Tight Wrapping Lines like Desktop */
+      h1 {
+        font-size: clamp(2.4rem, 10.5vw, 3.8rem);
         line-height: 0.88;
-        letter-spacing: -.065em;
+        letter-spacing: -.075em;
         font-weight: 900;
-        margin: 0;
-        color: #ffffff;
-      }
-      .hero-ai-text {
-        color: #ff9d8f;
-        background: linear-gradient(135deg, #ffffff 20%, #ff9d8f 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .mobile-break {
-        display: block;
-      }
-      .hero-split-right {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 6px;
-        border-left: 1.5px solid rgba(255, 235, 215, 0.20);
-        padding-left: 11px;
-      }
-      .hero-tagline {
-        display: block;
-        font-family: "Space Grotesk", Inter, sans-serif;
-        font-size: clamp(.88rem, 3.7vw, 1.05rem);
-        line-height: 1.15;
-        letter-spacing: -.03em;
-        font-weight: 800;
-        margin: 0;
-        color: #ffe6d4;
+        margin: 14px 0 16px;
+        max-width: 9ch;
+        color: var(--cream);
       }
       .dek {
-        display: block;
-        font-size: .74rem;
-        line-height: 1.45;
-        color: #ede0d4;
-        margin: 0;
+        font-size: .86rem;
+        line-height: 1.56;
+        color: #ead9ca;
         max-width: 100%;
+        margin: 0 0 18px;
       }
 
-      /* 3 Columns in a Single Row for Action Buttons */
+      /* Action Buttons */
       .actions {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 6px;
-        width: 100%;
-        margin-top: 10px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 16px;
       }
       .button {
-        padding: 10px 4px;
-        font-size: .74rem;
+        padding: 11px 16px;
+        font-size: .80rem;
         font-weight: 850;
         border-radius: 999px;
-        width: 100%;
+        flex: 1 1 auto;
+        min-width: 110px;
         justify-content: center;
         text-align: center;
-        white-space: nowrap;
-        letter-spacing: -.01em;
       }
 
-      /* Single-Row Horizontal Scrollable Stat Strip (No more 5 tall lines!) */
+      /* Single-Row Horizontal Scrollable Stat Strip */
       .stat-strip {
         display: flex;
         flex-wrap: nowrap;
@@ -1504,16 +1433,16 @@
 
       /* Hero Stage & Mascot */
       .hero-stage {
-        min-height: 360px;
-        max-height: 400px;
+        min-height: 380px;
+        max-height: 420px;
         order: 0;
-        margin: 6px 0 2px;
+        margin: 8px 0 4px;
         display: flex;
         justify-content: center;
         align-items: center;
       }
       .character-wrap {
-        width: min(84vw, 320px);
+        width: min(84vw, 330px);
         min-width: 260px;
         opacity: 1;
         transform: scale(1);
@@ -1607,7 +1536,7 @@
       .brand span:last-child { display: none; }
 
       /* Hero Section */
-      .hero { padding: 74px 12px 24px; gap: 14px; }
+      .hero { padding: 76px 14px 24px; gap: 14px; }
       .ai-craft-badge {
         font-size: .64rem;
         padding: 4px 10px;
@@ -1618,48 +1547,28 @@
         padding: 4px 9px;
       }
 
-      .hero-split-grid {
-        grid-template-columns: minmax(115px, .88fr) minmax(145px, 1.25fr);
-        gap: 10px;
-        padding: 10px 11px;
-        border-radius: 16px;
-        margin: 8px 0 10px;
-      }
-      .hero-split-left h1 {
-        font-size: clamp(2.1rem, 9.2vw, 2.75rem);
-      }
-      .hero-split-right {
-        padding-left: 9px;
-        gap: 4px;
-      }
-      .hero-tagline {
-        font-size: .84rem;
-        line-height: 1.15;
+      /* Big Bold Headline matching desktop visual rhythm */
+      h1 {
+        font-size: clamp(2.2rem, 9.8vw, 3.1rem);
+        line-height: 0.88;
+        letter-spacing: -.075em;
+        font-weight: 900;
+        margin: 12px 0 12px;
+        max-width: 9ch;
       }
       .dek {
-        font-size: .70rem;
-        line-height: 1.38;
+        font-size: .84rem;
+        line-height: 1.54;
+        margin-bottom: 14px;
       }
-      .actions {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 5px;
-        margin-top: 8px;
-      }
+      .actions { gap: 6px; margin-top: 12px; }
       .actions .button {
-        padding: 9px 2px;
-        font-size: .71rem;
+        padding: 10px 14px;
+        font-size: .76rem;
+        min-width: 95px;
       }
-      .stat-strip {
-        gap: 5px;
-        margin-top: 8px;
-      }
-      .stat {
-        min-height: 30px;
-        font-size: .65rem;
-        padding: 5px 9px;
-      }
-      .hero-stage { min-height: 330px; max-height: 360px; margin: 4px 0; }
-      .character-wrap { width: min(84vw, 290px); }
+      .hero-stage { min-height: 350px; max-height: 380px; margin: 4px 0; }
+      .character-wrap { width: min(84vw, 300px); }
       .orbit-chip {
         font-size: .59rem !important;
         padding: 4px 8px !important;
@@ -1675,6 +1584,13 @@
       .orbit-chip:nth-of-type(9)  { left: 3%; top: 77%; }
       .orbit-chip:nth-of-type(10) { right: 3%; left: auto; top: 75%; }
       .orbit-chip:nth-of-type(11) { left: 50%; top: 91%; transform: translateX(-50%) !important; }
+
+      .stat-strip { gap: 5px; margin-top: 8px; }
+      .stat {
+        min-height: 32px;
+        font-size: .67rem;
+        padding: 5px 9px;
+      }
 
       /* Section Foundations */
       section:not(.hero) { padding: 56px 14px; }
@@ -1817,37 +1733,19 @@
 
     /* Compact Smartphones (<= 420px: iPhone SE, mini, 360-390px) */
     @media(max-width: 420px) {
-      .hero { padding: 68px 8px 20px; gap: 12px; }
+      .hero { padding: 68px 10px 20px; gap: 12px; }
       .ai-craft-badge { font-size: .60rem; padding: 4px 8px; }
-      .hero-split-grid {
-        grid-template-columns: minmax(105px, .85fr) minmax(135px, 1.25fr);
-        gap: 8px;
-        padding: 8px 9px;
+      h1 {
+        font-size: clamp(1.95rem, 9.4vw, 2.5rem);
+        line-height: 0.88;
+        letter-spacing: -.07em;
+        max-width: 9ch;
       }
-      .hero-split-left h1 { font-size: clamp(1.85rem, 8.8vw, 2.3rem); }
-      .hero-tagline { font-size: .78rem; }
-      .dek { font-size: .67rem; line-height: 1.32; }
-      .actions {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 4px;
-        width: 100%;
-        margin-top: 8px;
-      }
-      .actions .button {
-        font-size: .66rem;
-        padding: 8px 2px;
-        width: 100%;
-        justify-content: center;
-        text-align: center;
-      }
-      .stat-strip {
-        display: flex;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        gap: 5px;
-      }
-      .stat { font-size: .62rem; padding: 4px 7px; min-height: 28px; }
+      .dek { font-size: .78rem; line-height: 1.46; }
+      .actions { flex-direction: row; gap: 5px; }
+      .actions .button { font-size: .70rem; padding: 8px 10px; min-width: 80px; }
+      .stat-strip { gap: 5px; }
+      .stat { font-size: .62rem; padding: 4px 8px; min-height: 28px; }
       .hero-stage { min-height: 300px; }
       .character-wrap { width: min(88vw, 260px); }
       .orbit-chip { font-size: .55rem !important; padding: 3px 6px !important; }
@@ -2368,20 +2266,11 @@
           </div>
           <br>
           <span class="eyebrow">Agentic AI / Backend AI Infrastructure</span>
-          
-          <div class="hero-split-grid">
-            <div class="hero-split-left">
-              <h1 id="hero-title">I build <span class="hero-ai-text">AI</span></h1>
-            </div>
-            <div class="hero-split-right">
-              <p class="hero-tagline">systems that reason, route and scale.</p>
-              <p class="dek">AI Software Engineer with 2+ years of experience building production LLM, RAG, LangGraph, FastAPI, and structured-output systems for automation, recommendation, audit, and orchestration workflows.</p>
-            </div>
-          </div>
-
+          <h1 id="hero-title">I build AI systems that reason, route and scale.</h1>
+          <p class="dek">AI Software Engineer with 2+ years of experience building production LLM, RAG, LangGraph, FastAPI, and structured-output systems for automation, recommendation, audit, and orchestration workflows.</p>
           <div class="actions">
             <a class="button primary" href="#projects">View Projects</a>
-            <a class="button" href="assets/Harman-Papneja-Resume.pdf" download>Resume</a>
+            <a class="button" href="assets/Harman-Papneja-Resume.pdf" download>Download Resume</a>
             <a class="button" href="https://www.linkedin.com/in/harman-papneja" target="_blank" rel="noreferrer">LinkedIn</a>
           </div>
         </div>
