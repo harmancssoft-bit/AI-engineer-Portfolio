@@ -2814,13 +2814,19 @@
     // Native video playback keeps the decoder smooth on desktop and mobile.
 
     if (charVideo) {
+      const resumeHeroVideo = () => {
+        if (!reduced && charVideo.paused) charVideo.play().catch(() => {});
+      };
       charVideo.loop = true;
       charVideo.autoplay = true;
       charVideo.addEventListener('loadedmetadata', () => {
-        if (!reduced) charVideo.play().catch(() => {});
+        resumeHeroVideo();
       });
+      charVideo.addEventListener('canplay', resumeHeroVideo);
+      charVideo.addEventListener('waiting', resumeHeroVideo);
+      charVideo.addEventListener('stalled', resumeHeroVideo);
       if (charVideo.readyState >= 1 && !reduced) {
-        charVideo.play().catch(() => {});
+        resumeHeroVideo();
       }
     }
 
